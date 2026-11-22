@@ -1,9 +1,10 @@
 export type { Category } from './model/types'
 export { toNameKey } from './model/types'
+export { DuplicateCategoryError } from './api/categories'
 export {
-  createCategory,
-  DuplicateCategoryError,
-  getAllCategories,
-  getCategory,
-  renameCategory,
-} from './api/categories'
+  categoryKeys,
+  useCategories,
+  useCategory,
+  useCreateCategory,
+  useRenameCategory,
+} from './api/queries'

@@ -1,1 +1,1 @@
-export { deleteCategory } from './api/deleteCategory'
+export { useDeleteCategory } from './api/useDeleteCategory'
