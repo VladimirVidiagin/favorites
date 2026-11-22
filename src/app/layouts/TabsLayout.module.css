@@ -1,0 +1,4 @@
+/* Room for the fixed tab bar, the "+" button and the categories search field. */
+.page {
+  padding-bottom: calc(var(--tabbar-height) + var(--safe-bottom) + 140px);
+}

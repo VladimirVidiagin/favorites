@@ -1,0 +1,22 @@
+.fab {
+  position: fixed;
+  right: 16px;
+  /* --fab-raise lets a page lift the button above its own bottom bar (e.g. search field). */
+  bottom: calc(var(--tabbar-height) + var(--safe-bottom) + 16px + var(--fab-raise, 0px));
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: 0 4px 14px rgba(47, 111, 237, 0.4);
+  cursor: pointer;
+}
+
+.fab:active {
+  transform: scale(0.94);
+}

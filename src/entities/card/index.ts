@@ -11,3 +11,4 @@ export {
   useSaveImage,
   useUpdateCard,
 } from './api/queries'
+export { CardTile } from './ui/CardTile'
