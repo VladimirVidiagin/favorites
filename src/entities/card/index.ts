@@ -8,7 +8,7 @@ export {
   useDeleteCard,
   useImageUrl,
   useMoveCard,
-  useSaveImage,
+  useSetCardImage,
   useUpdateCard,
 } from './api/queries'
 export { CardTile } from './ui/CardTile'

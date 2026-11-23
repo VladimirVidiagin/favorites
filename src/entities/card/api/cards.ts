@@ -66,6 +66,24 @@ export async function moveCard(id: string, categoryId: string | null): Promise<v
   if (!updated) throw new Error(`Card ${id} not found`)
 }
 
+/**
+ * Sets (blob) or removes (null) the card photo. The old image is deleted in the same
+ * transaction, so replaced photos do not pile up in the database.
+ */
+export async function setCardImage(id: string, blob: Blob | null): Promise<void> {
+  await db.transaction('rw', db.cards, db.images, async () => {
+    const card = await db.cards.get(id)
+    if (!card) throw new Error(`Card ${id} not found`)
+    if (card.imageId) await db.images.delete(card.imageId)
+    let imageId: string | undefined
+    if (blob) {
+      imageId = crypto.randomUUID()
+      await db.images.add({ id: imageId, blob })
+    }
+    await db.cards.update(id, { imageId })
+  })
+}
+
 /** Deletes the card together with its image. */
 export async function deleteCard(id: string): Promise<void> {
   await db.transaction('rw', db.cards, db.images, async () => {

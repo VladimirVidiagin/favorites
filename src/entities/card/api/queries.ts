@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useObjectUrl } from '../../../shared/lib'
 import type { Card, CardInput, CardPatch } from '../model/types'
-import { createCard, deleteCard, getAllCards, moveCard, updateCard } from './cards'
-import { getImage, saveImage } from './images'
+import { createCard, deleteCard, getAllCards, moveCard, setCardImage, updateCard } from './cards'
+import { getImage } from './images'
 
 export const cardKeys = {
   all: ['cards'] as const,
@@ -75,6 +75,11 @@ export function useImageUrl(imageId: string | undefined): string | undefined {
   return useObjectUrl(data)
 }
 
-export function useSaveImage() {
-  return useMutation({ mutationFn: (blob: Blob) => saveImage(blob) })
+/** Sets or removes (null) the card photo; the old image is deleted. */
+export function useSetCardImage() {
+  const onSuccess = useInvalidateCards()
+  return useMutation({
+    mutationFn: ({ id, blob }: { id: string; blob: Blob | null }) => setCardImage(id, blob),
+    onSuccess,
+  })
 }

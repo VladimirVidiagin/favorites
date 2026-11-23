@@ -1,1 +1,2 @@
-export { CardPage, NewCardPage } from './ui/CardPage'
+export { CardPage } from './ui/CardPage'
+export { NewCardPage } from './ui/NewCardPage'

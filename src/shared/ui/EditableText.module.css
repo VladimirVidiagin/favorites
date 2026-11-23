@@ -1,0 +1,58 @@
+.view {
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: text;
+  overflow-wrap: anywhere;
+}
+
+.view:active {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.placeholder {
+  color: var(--text-muted);
+}
+
+.editing {
+  position: relative;
+}
+
+.field {
+  display: block;
+  width: 100%;
+  padding: 10px 44px 10px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface);
+  outline: none;
+  resize: none;
+  /* 16px+ prevents iOS Safari from zooming in on focus. */
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.body {
+  font-size: 16px;
+}
+
+.undo {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: pointer;
+}
