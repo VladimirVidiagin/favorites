@@ -29,7 +29,11 @@ export interface CategoryRecord {
   createdAt: number
 }
 
+/** Two JPEG versions of one photo (D-11). Neither field is indexed, so no schema version bump. */
 export interface ImageRecord {
   id: string
-  blob: Blob
+  /** Long side up to 1600 px, for the card page. */
+  full: Blob
+  /** Short side up to 600 px, for grid tiles. */
+  thumb: Blob
 }

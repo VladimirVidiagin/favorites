@@ -59,7 +59,11 @@ function CardEditor({ card }: { card: Card }) {
 
       <PhotoPicker
         imageId={card.imageId}
-        onPick={(blob) => setCardImage.mutate({ id: card.id, blob }, { onError })}
+        busy={setCardImage.isPending}
+        onPick={(file) => {
+          setError(undefined)
+          setCardImage.mutate({ id: card.id, file }, { onError })
+        }}
       />
 
       <div className={styles.body}>

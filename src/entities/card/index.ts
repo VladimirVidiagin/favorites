@@ -1,4 +1,5 @@
 export type { Card, CardInput, CardPatch } from './model/types'
+export type { ImageVariant } from './api/images'
 export {
   cardKeys,
   useCard,

@@ -1,5 +1,6 @@
 import { db } from '../../../shared/db'
 import type { Card, CardInput, CardPatch } from '../model/types'
+import type { PhotoVersions } from './images'
 
 function cleanTitle(title: string): string {
   const trimmed = title.trim()
@@ -70,15 +71,15 @@ export async function moveCard(id: string, categoryId: string | null): Promise<v
  * Sets (blob) or removes (null) the card photo. The old image is deleted in the same
  * transaction, so replaced photos do not pile up in the database.
  */
-export async function setCardImage(id: string, blob: Blob | null): Promise<void> {
+export async function setCardImage(id: string, photo: PhotoVersions | null): Promise<void> {
   await db.transaction('rw', db.cards, db.images, async () => {
     const card = await db.cards.get(id)
     if (!card) throw new Error(`Card ${id} not found`)
     if (card.imageId) await db.images.delete(card.imageId)
     let imageId: string | undefined
-    if (blob) {
+    if (photo) {
       imageId = crypto.randomUUID()
-      await db.images.add({ id: imageId, blob })
+      await db.images.add({ id: imageId, ...photo })
     }
     await db.cards.update(id, { imageId })
   })

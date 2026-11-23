@@ -4,25 +4,30 @@ import styles from './CardPage.module.css'
 
 interface PhotoPickerProps {
   imageId: string | undefined
-  onPick: (blob: Blob | null) => void
+  onPick: (file: Blob | null) => void
+  /** Photo is being compressed and saved. */
+  busy: boolean
 }
 
 /** Tap the photo (or placeholder) to choose from the gallery. */
-export function PhotoPicker({ imageId, onPick }: PhotoPickerProps) {
+export function PhotoPicker({ imageId, onPick, busy }: PhotoPickerProps) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const imageUrl = useImageUrl(imageId)
+  const imageUrl = useImageUrl(imageId, 'full')
 
   const onFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    // TODO: compress before saving. Photo compression is an open decision; until then
-    // the original file from the gallery is stored as is.
-    if (file) onPick(file)
+    if (file) onPick(file) // compressed into two versions by useSetCardImage (D-11)
     e.target.value = '' // allow picking the same file again
   }
 
   return (
     <div className={styles.media}>
-      <button type="button" className={styles.mediaButton} onClick={() => inputRef.current?.click()}>
+      <button
+        type="button"
+        className={styles.mediaButton}
+        disabled={busy}
+        onClick={() => inputRef.current?.click()}
+      >
         {imageUrl ? (
           <img src={imageUrl} alt="" className={styles.image} />
         ) : (
@@ -35,7 +40,12 @@ export function PhotoPicker({ imageId, onPick }: PhotoPickerProps) {
           </span>
         )}
       </button>
-      {imageId && (
+      {busy && (
+        <div className={styles.busy} role="status" aria-label="Обработка фото">
+          <span className={styles.spinner} />
+        </div>
+      )}
+      {imageId && !busy && (
         <button type="button" className={styles.removePhoto} onClick={() => onPick(null)}>
           Убрать фото
         </button>

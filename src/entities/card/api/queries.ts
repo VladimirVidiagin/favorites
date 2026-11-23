@@ -2,11 +2,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useObjectUrl } from '../../../shared/lib'
 import type { Card, CardInput, CardPatch } from '../model/types'
 import { createCard, deleteCard, getAllCards, moveCard, setCardImage, updateCard } from './cards'
-import { getImage } from './images'
+import { getImage, makePhotoVersions, type ImageVariant } from './images'
 
 export const cardKeys = {
   all: ['cards'] as const,
-  image: (id: string) => ['images', id] as const,
+  image: (id: string, variant: ImageVariant) => ['images', id, variant] as const,
 }
 
 // One query holds all cards (D-4: everything is loaded at start).
@@ -65,21 +65,28 @@ export function useDeleteCard() {
   return useMutation({ mutationFn: (id: string) => deleteCard(id), onSuccess })
 }
 
-/** Image as a URL for <img src>. Image blobs never change, so they are cached by id. */
-export function useImageUrl(imageId: string | undefined): string | undefined {
+/**
+ * Image as a URL for <img src>. Image blobs never change (a new photo gets a new id),
+ * so they are cached by id. Use 'thumb' in grids and 'full' on the card page (D-11).
+ */
+export function useImageUrl(imageId: string | undefined, variant: ImageVariant): string | undefined {
   const { data } = useQuery({
-    queryKey: cardKeys.image(imageId ?? ''),
-    queryFn: () => getImage(imageId!),
+    queryKey: cardKeys.image(imageId ?? '', variant),
+    queryFn: () => getImage(imageId!, variant),
     enabled: !!imageId,
   })
   return useObjectUrl(data)
 }
 
-/** Sets or removes (null) the card photo; the old image is deleted. */
+/**
+ * Sets or removes (null) the card photo; the old image is deleted.
+ * Compression runs inside the mutation, so `isPending` covers it and the UI can show a loader.
+ */
 export function useSetCardImage() {
   const onSuccess = useInvalidateCards()
   return useMutation({
-    mutationFn: ({ id, blob }: { id: string; blob: Blob | null }) => setCardImage(id, blob),
+    mutationFn: async ({ id, file }: { id: string; file: Blob | null }) =>
+      setCardImage(id, file ? await makePhotoVersions(file) : null),
     onSuccess,
   })
 }

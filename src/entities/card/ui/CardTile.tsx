@@ -7,7 +7,7 @@ import styles from './CardTile.module.css'
 const MAX_BADGES = 2
 
 export function CardTile({ card }: { card: Card }) {
-  const imageUrl = useImageUrl(card.imageId)
+  const imageUrl = useImageUrl(card.imageId, 'thumb')
   const shownBadges = card.badges.slice(0, MAX_BADGES)
   const hasMoreBadges = card.badges.length > MAX_BADGES
 
